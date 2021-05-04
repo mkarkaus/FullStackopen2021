@@ -1,0 +1,15 @@
+note over browser:
+Browser executes the event handler for submitting
+the form which creates a new note out of user input.
+The note is added to the end of the 'notes' list and
+the browser renders said list on the display.
+The code that browser executed also sends
+the new note as POST-request to the server.
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server:
+server adds the new note received
+through POST to the data.json file
+end note
