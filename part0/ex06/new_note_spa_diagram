@@ -10,6 +10,12 @@ end note
 browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
 
 note over server:
-server adds the new note received
+Server adds the new note received
 through POST to the data.json file
+after which server sends response code
+201 to the browser which means that
+request has succeeded and has led to the
+creation of a resource
 end note
+
+server-->browser: Response code 201
