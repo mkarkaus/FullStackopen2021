@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 const Header = ({ text }) => <h1>{text}</h1>
 
-const Stats = ({ text, state }) => <p>{text} {state}</p>
+const Statistics = ({ text, state }) => <p>{text} {state}</p>
 
 const Button = ({ handleClick, text }) => {
 	
@@ -44,12 +44,12 @@ const App = () => {
 			<Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
 			<Button handleClick={() => setBad(bad + 1)} text="bad" />
 			<Header text={stats} />
-			<Stats text="good" state={good} />
-			<Stats text="neutral" state={neutral} />
-			<Stats text="bad" state={bad} />
-			<Stats text="all" state={good + neutral + bad} />
-			<Stats text="average" state={average(good, neutral, bad)} />
-			<Stats text="positive" state={positive(good, good + neutral + bad)} />
+			<Statistics text="good" state={good} />
+			<Statistics text="neutral" state={neutral} />
+			<Statistics text="bad" state={bad} />
+			<Statistics text="all" state={good + neutral + bad} />
+			<Statistics text="average" state={average(good, neutral, bad)} />
+			<Statistics text="positive" state={positive(good, good + neutral + bad)} />
 		</div>
 	)
 }
