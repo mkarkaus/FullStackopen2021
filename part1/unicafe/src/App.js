@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 
 const Header = ({ text }) => <h1>{text}</h1>
 
-const Statistic = ({ name, value }) => <div>{name} {value}</div>
+const Statistic = ({ name, value }) => {
+	return (
+		<tr>
+			<td>{name}</td>
+			<td>{value}</td>
+		</tr>
+	)
+}
 
 const Statistics = (props) => {
 	const good = props.good
@@ -15,14 +22,16 @@ const Statistics = (props) => {
 	if (good + neutral + bad === 0)
 		return (<p>No feedback given</p>)
 	return (
-		<div>
-			<Statistic name='good' value={good} />
-			<Statistic name='neutral' value={neutral} />
-			<Statistic name='bad' value={bad} />
-			<Statistic name='all' value={good + neutral + bad} />
-			<Statistic name='average' value={average(good, neutral, bad)} />
-			<Statistic name='positive' value={positive(good, good + neutral + bad)} />
-		</div>
+		<table>
+			<tbody>
+				<Statistic name='good' value={good} />
+				<Statistic name='neutral' value={neutral} />
+				<Statistic name='bad' value={bad} />
+				<Statistic name='all' value={good + neutral + bad} />
+				<Statistic name='average' value={average(good, neutral, bad)} />
+				<Statistic name='positive' value={positive(good, good + neutral + bad)} />
+			</tbody>
+		</table>
 	)
 }
 
