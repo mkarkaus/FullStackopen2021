@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 const Header = ({ text }) => <h1>{text}</h1>
 
-const Statistic = ({ name, value }) => <p>{name} {value}</p>
+const Statistic = ({ name, value }) => <div>{name} {value}</div>
 
 const Statistics = (props) => {
 	const good = props.good
