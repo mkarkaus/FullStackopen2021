@@ -21,6 +21,22 @@ const App = () => {
 	const give = 'give feedback'
 	const stats = 'statistics'
 
+	const average = (good, neutral, bad) => {
+		if (good + neutral + bad === 0)
+			return (0)
+		return (
+			((good * 1) + (neutral * 0) + (bad * -1)) / (good + neutral + bad)
+		)
+	}
+
+	const positive = (good, all) => {
+		if (all === 0)
+			return ('0 %')
+		return (
+			(good * 100 / all) + ' %'
+		)
+	}
+
 	return (
 		<div>
 			<Header text={give} />
@@ -31,6 +47,9 @@ const App = () => {
 			<Stats text="good" state={good} />
 			<Stats text="neutral" state={neutral} />
 			<Stats text="bad" state={bad} />
+			<Stats text="all" state={good + neutral + bad} />
+			<Stats text="average" state={average(good, neutral, bad)} />
+			<Stats text="positive" state={positive(good, good + neutral + bad)} />
 		</div>
 	)
 }
