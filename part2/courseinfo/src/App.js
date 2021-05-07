@@ -14,7 +14,7 @@ const Content = ({ course }) => (
 
 const Total = ({ course }) => (
 		<h3>
-			total of {course.parts.reduce((total, part) => 
+			total of {course.parts.reduce((total, part) =>
 				total + part.exercises, 0)} exercises
 		</h3>
 )
