@@ -7,6 +7,8 @@ const App = () => {
 	const [found, setFound] = useState([])
 	const [countries, setCountries] = useState([])
 	const [filter, setFilter] = useState('')
+	const [weather, setWeather] = useState([])
+	const api_key = process.env.REACT_APP_API_KEY
 
 	useEffect(() => {
 		axios
@@ -32,7 +34,13 @@ const App = () => {
 	return (
 		<div>
 			<Filter filter={filter} setFilter={setFilter} />
-			<Countries found={found} filter={filter} setFound={setFound} />
+			<Countries found={found}
+				filter={filter}
+				setFound={setFound}
+				api_key={api_key}
+				weather={weather}
+				setWeather={setWeather}
+			/>
 		</div>
 	);
 }
