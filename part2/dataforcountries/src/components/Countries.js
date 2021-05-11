@@ -18,9 +18,15 @@ const AdditionalInfo = ({ country }) =>
 		/>
 	</div>
 
-const Country = ({ country }) => <div>{country.name}</div>
+const Country = ({ country, setFound }) => 
+	<div>
+		{country.name}
+		<button onClick={() => setFound([country])}>
+			show
+		</button>
+	</div>
 
-const Countries = ({ found, filter }) => {
+const Countries = ({ found, filter, setFound }) => {
 	if (found.length > 10)
 		return (<div>Too many matches, specify another filter</div>)
 	else if (found.length === 1)
@@ -29,7 +35,7 @@ const Countries = ({ found, filter }) => {
 		<div>
 			{found.map(country => 
 				country.name.toLowerCase().includes(filter.toLowerCase())
-				? <Country key={country.name} country={country} />
+				? <Country key={country.name} country={country} setFound={setFound} />
 				: null
 			)}
 		</div>

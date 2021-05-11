@@ -32,7 +32,7 @@ const App = () => {
 	return (
 		<div>
 			<Filter filter={filter} setFilter={setFilter} />
-			<Countries found={found} filter={filter} />
+			<Countries found={found} filter={filter} setFound={setFound} />
 		</div>
 	);
 }
