@@ -10,7 +10,7 @@ const App = () => {
 	const [ newName, setNewName ] = useState('')
 	const [ newNumber, setNewNumber ] = useState('')
 	const [ filter, setFilter ] = useState('')
-	const [ notifMessage, setNotifMessage ] = useState(null)
+	const [ notifMessage, setNotifMessage ] = useState({ message: null, class: null })
 
 	useEffect(() => 
 		personService
@@ -31,16 +31,24 @@ const App = () => {
 			{
 				personService
 					.change(personObject, persons.find(person => person.name === newName).id)
-					.then(() => 
+					.then(() => {
 						setPersons(persons.map(person =>
 							(person.name === newName)
-							? personObject
+							? {...personObject, id: person.id}
 							: person
-						)))
-				setNotifMessage(`The number of ${newName} has been changed`)
-				setTimeout(() => {
-					setNotifMessage(null)
-				}, 2000)
+						))
+						setNotifMessage({
+							message: `The number of ${newName} has been changed`,
+							class: 'notification'
+						})
+					})
+					.catch(() => {
+						setPersons(persons.filter(person => person.name !== newName))
+						setNotifMessage({
+							message: `Information of ${newName} has already been removed from the server`,
+							class: 'error'
+						})
+					})
 			}
 		}
 		else
@@ -50,11 +58,14 @@ const App = () => {
 			.then(returnedNote => 
 				setPersons(persons.concat(returnedNote))
 			)
-			setNotifMessage(`Added ${newName}`)
-			setTimeout(() => {
-				setNotifMessage(null)
-			}, 2000)
+			setNotifMessage({
+				message: `Added ${newName}`,
+				class: 'notification'
+			})
 		}
+		setTimeout(() => {
+			setNotifMessage({ message: null, class: null })
+		}, 2000)
 		setNewName('')
 		setNewNumber('')
 	}
@@ -68,6 +79,13 @@ const App = () => {
 				.then(() => 
 					setPersons(persons.filter(temp => temp.id !== id))
 				)
+			setNotifMessage({
+				message: `${persons.find(person => person.id === id).name} removed`,
+				class: 'notification'
+			})
+			setTimeout(() => {
+				setNotifMessage({ message: null, class: null })
+			}, 2000)
 		}
 	}
 
@@ -77,7 +95,9 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
-			<Notification message={notifMessage} />
+			<Notification message={notifMessage.message}
+				className={notifMessage.class}
+			/>
 			<Filter filter={filter} setFilter={setFilter} />
 			<h3>add a new</h3>
 			<PersonForm handleNewPerson={addPerson}
