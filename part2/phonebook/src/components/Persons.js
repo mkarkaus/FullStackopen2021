@@ -2,7 +2,7 @@ import React from 'react'
 
 const Person = (props) => 
 	<div>
-		{props.name} {props.number}
+		{props.name} {props.number + ' '}
 		<button onClick={(event) => props.handleRemovePerson(event, props.id)}>
 			Delete
 		</button>
@@ -10,9 +10,9 @@ const Person = (props) =>
 
 const Persons = (props) =>
 	<div>
-		{props.persons.map(person => 
+		{props.persons.map(person =>
 			person.name.toLowerCase().includes(props.filter.toLowerCase())
-				? <Person key={person.id}
+				? <Person key={person.name}
 						id={person.id}
 						name={person.name}
 						number={person.number}
