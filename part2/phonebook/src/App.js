@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter.js'
+import Notification from './components/Notification.js'
 import Persons from './components/Persons.js'
 import PersonForm from './components/PersonForm.js'
 import personService from './services/persons'
@@ -9,6 +10,7 @@ const App = () => {
 	const [ newName, setNewName ] = useState('')
 	const [ newNumber, setNewNumber ] = useState('')
 	const [ filter, setFilter ] = useState('')
+	const [ notifMessage, setNotifMessage ] = useState(null)
 
 	useEffect(() => 
 		personService
@@ -35,14 +37,24 @@ const App = () => {
 							? personObject
 							: person
 						)))
+				setNotifMessage(`The number of ${newName} has been changed`)
+				setTimeout(() => {
+					setNotifMessage(null)
+				}, 2000)
 			}
 		}
 		else
+		{
 			personService
-				.create(personObject)
-				.then(returnedNote => 
-					setPersons(persons.concat(returnedNote))
-				)
+			.create(personObject)
+			.then(returnedNote => 
+				setPersons(persons.concat(returnedNote))
+			)
+			setNotifMessage(`Added ${newName}`)
+			setTimeout(() => {
+				setNotifMessage(null)
+			}, 2000)
+		}
 		setNewName('')
 		setNewNumber('')
 	}
@@ -65,6 +77,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification message={notifMessage} />
 			<Filter filter={filter} setFilter={setFilter} />
 			<h3>add a new</h3>
 			<PersonForm handleNewPerson={addPerson}
