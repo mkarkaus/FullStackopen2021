@@ -54,14 +54,20 @@ const App = () => {
 		else
 		{
 			personService
-			.create(personObject)
-			.then(returnedNote => 
-				setPersons(persons.concat(returnedNote))
-			)
-			setNotifMessage({
-				message: `Added ${newName}`,
-				class: 'notification'
-			})
+				.create(personObject)
+				.then(returnedNote => {
+					setPersons(persons.concat(returnedNote))
+					setNotifMessage({
+						message: `Added ${newName}`,
+						class: 'notification'
+					})
+				})
+				.catch(error => {
+					setNotifMessage({
+						message: `Invalid input`,
+						class: 'error'
+					})
+				})
 		}
 		setTimeout(() => {
 			setNotifMessage({ message: null, class: null })
