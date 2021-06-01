@@ -42,12 +42,21 @@ const App = () => {
 							class: 'notification'
 						})
 					})
-					.catch(() => {
-						setPersons(persons.filter(person => person.name !== newName))
-						setNotifMessage({
-							message: `Information of ${newName} has already been removed from the server`,
-							class: 'error'
-						})
+					.catch(error => {
+						console.log(error.response.data.error);
+						if (error.response.status === 404)
+						{
+							setPersons(persons.filter(person => person.name !== newName))
+							setNotifMessage({
+								message: `Information of ${newName} has already been removed from the server`,
+								class: 'error'
+							})
+						}
+						else
+							setNotifMessage({
+								message: error.response.data.error,
+								class: 'error'
+							})
 					})
 			}
 		}
@@ -55,8 +64,8 @@ const App = () => {
 		{
 			personService
 				.create(personObject)
-				.then(returnedNote => {
-					setPersons(persons.concat(returnedNote))
+				.then(returnedPerson => {
+					setPersons(persons.concat(returnedPerson))
 					setNotifMessage({
 						message: `Added ${newName}`,
 						class: 'notification'
@@ -64,9 +73,10 @@ const App = () => {
 				})
 				.catch(error => {
 					setNotifMessage({
-						message: `Invalid input`,
+						message: error.response.data.error,
 						class: 'error'
 					})
+					console.log(error.response.data.error)
 				})
 		}
 		setTimeout(() => {
