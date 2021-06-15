@@ -33,7 +33,7 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
 
 	const reducer = (acc, blogs, key) => {
-		let pair = {
+		const pair = {
 			'author': key,
 			'blogs': blogs
 		}
@@ -51,9 +51,31 @@ const mostBlogs = (blogs) => {
 	return blogCounts
 }
 
+const mostLikes = (blogs) => {
+	const reducer = (acc, likes, key) => {
+		const pair = {
+			'author': key,
+			'likes': likes
+		}
+		const result = (likes >= acc.likes)
+			? pair
+			: acc
+		return result
+	}
+
+	const result = _(blogs)
+		.groupBy('author')
+		.mapValues(array => array.reduce((sum, item) => sum + ((item.likes) ? item.likes : 0)
+		, 0))
+		.reduce(reducer, { likes: 0 })
+
+	return result
+}
+
 module.exports = {
 	dummy,
 	totalLikes,
 	favoriteBlog,
-	mostBlogs
+	mostBlogs,
+	mostLikes
 }

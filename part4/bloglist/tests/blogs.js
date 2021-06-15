@@ -87,7 +87,7 @@ const twoTopBloggers = [
 	  title: 'Spells and stuff',
 	  author: 'Harry Potter',
 	  url: 'http://www.youtube.com',
-	  likes: 12,
+	  likes: 15,
 	  __v: 0
 	},
 	{
@@ -154,7 +154,7 @@ const fourTopBloggers = [
 	  title: 'Go To Statement Considered Fun',
 	  author: 'Edsger W. Dijkstra',
 	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-	  likes: 8,
+	  likes: 7,
 	  __v: 0
 	},
 	{
@@ -162,7 +162,7 @@ const fourTopBloggers = [
 	  title: 'Go To Statement Considered Harmful',
 	  author: 'Edsger W. Dijkstra',
 	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-	  likes: 3,
+	  likes: 10,
 	  __v: 0
 	},
 	{
@@ -178,7 +178,7 @@ const fourTopBloggers = [
 	  title: 'Cockroaches',
 	  author: 'Harry Potter',
 	  url: 'http://www.youtube.com',
-	  likes: 4,
+	  likes: 5,
 	  __v: 0
 	},
 	{
@@ -186,7 +186,7 @@ const fourTopBloggers = [
 	  title: 'Testtest',
 	  author: 'Henry',
 	  url: 'http://www.google.fi',
-	  likes: 5,
+	  likes: 3,
 	  __v: 0
 	},
 	{
@@ -194,7 +194,7 @@ const fourTopBloggers = [
 	  title: 'Test123',
 	  author: 'Henry',
 	  url: 'http://www.google.fi',
-	  likes: 6,
+	  likes: 14,
 	  __v: 0
 	}
 ]
