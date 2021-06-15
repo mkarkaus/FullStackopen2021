@@ -1,7 +1,7 @@
 const biggerList = [
 	{
 	  _id: '5a422aa71b54a676234d17f1',
-	  title: 'Go To Statement Considered Harmful',
+	  title: 'Go To Statement Considered Fun',
 	  author: 'Edsger W. Dijkstra',
 	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
 	  likes: 8,
@@ -17,7 +17,7 @@ const biggerList = [
 	},
 	{
 	  _id: '5a422aa71b54a676234d17f3',
-	  title: 'Go To Statement Considered Harmful',
+	  title: 'Go To Statement Considered Strange',
 	  author: 'Edsger W. Dijkstra',
 	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
 	  likes: 17,
@@ -25,26 +25,176 @@ const biggerList = [
 	},
 	{
 	  _id: '5a422aa71b54a676234d17f4',
-	  title: 'Go To Statement Considered Harmful',
-	  author: 'Edsger W. Dijkstra',
-	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  title: 'Spells and stuff',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
 	  likes: 12,
 	  __v: 0
 	},
 	{
 	  _id: '5a422aa71b54a676234d17f5',
-	  title: 'Go To Statement Considered Harmful',
-	  author: 'Edsger W. Dijkstra',
-	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  title: 'Magical beasts',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
 	  likes: 4,
 	  __v: 0
 	},
 	{
 	  _id: '5a422aa71b54a676234d17f6',
-	  title: 'Go To Statement Considered Harmful',
+	  title: 'Go To Statement Considered Happy',
 	  author: 'Edsger W. Dijkstra',
 	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
 	  likes: 7,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f6',
+	  title: 'Testtest',
+	  author: 'Henry',
+	  url: 'http://www.google.fi',
+	  likes: 5,
+	  __v: 0
+	}
+]
+
+const twoTopBloggers = [
+	{
+	  _id: '5a422aa71b54a676234d17f1',
+	  title: 'Go To Statement Considered Fun',
+	  author: 'Edsger W. Dijkstra',
+	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  likes: 8,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f2',
+	  title: 'Go To Statement Considered Harmful',
+	  author: 'Edsger W. Dijkstra',
+	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  likes: 3,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f3',
+	  title: 'Go To Statement Considered Strange',
+	  author: 'Edsger W. Dijkstra',
+	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  likes: 17,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f4',
+	  title: 'Spells and stuff',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
+	  likes: 12,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f5',
+	  title: 'Magical beasts',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
+	  likes: 4,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17e4',
+	  title: 'Flying Brooms',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
+	  likes: 12,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f5',
+	  title: 'Cockroaches',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
+	  likes: 4,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f6',
+	  title: 'Go To Statement Considered Happy',
+	  author: 'Edsger W. Dijkstra',
+	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  likes: 7,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f6',
+	  title: 'Testtest',
+	  author: 'Henry',
+	  url: 'http://www.google.fi',
+	  likes: 5,
+	  __v: 0
+	}
+]
+
+const fourTopBloggers = [
+	{
+	  _id: '5a422aa71b54a676234d17a2',
+	  title: 'Happy little trees',
+	  author: 'Bob Ross',
+	  url: 'http://www.paint.com',
+	  likes: 8,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17a3',
+	  title: 'Happy little accidents',
+	  author: 'Bob Ross',
+	  url: 'http://www.paint.com',
+	  likes: 9,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f1',
+	  title: 'Go To Statement Considered Fun',
+	  author: 'Edsger W. Dijkstra',
+	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  likes: 8,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f2',
+	  title: 'Go To Statement Considered Harmful',
+	  author: 'Edsger W. Dijkstra',
+	  url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+	  likes: 3,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17e4',
+	  title: 'Flying Brooms',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
+	  likes: 12,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f5',
+	  title: 'Cockroaches',
+	  author: 'Harry Potter',
+	  url: 'http://www.youtube.com',
+	  likes: 4,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17f6',
+	  title: 'Testtest',
+	  author: 'Henry',
+	  url: 'http://www.google.fi',
+	  likes: 5,
+	  __v: 0
+	},
+	{
+	  _id: '5a422aa71b54a676234d17e1',
+	  title: 'Test123',
+	  author: 'Henry',
+	  url: 'http://www.google.fi',
+	  likes: 6,
 	  __v: 0
 	}
 ]
@@ -113,5 +263,7 @@ module.exports = {
 	biggerList,
 	listWithOneBlog,
 	listWithoutlikes,
-	listWithSomeEmpty
+	listWithSomeEmpty,
+	twoTopBloggers,
+	fourTopBloggers
 }
