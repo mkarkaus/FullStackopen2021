@@ -60,6 +60,14 @@ test("'Likes' property value will default to 0 if it's missing from the request"
 	await api.delete(`/api/blogs/${addedBlog.body.id}`)
 })
 
+test('Missing title and url in request receive respond 400 Bad Request', async () => {
+	const blog = {
+		author: 'THE author',
+		likes: 1122
+	}
+	await api.post('/api/blogs').send(blog).expect(400)
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
