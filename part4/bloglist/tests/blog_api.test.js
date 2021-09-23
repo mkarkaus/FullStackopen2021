@@ -11,6 +11,14 @@ test('correct amount of blogs and as json is returned', async () => {
 	expect(response.body.length).toBe(3)
 })
 
+test("Unique identifier property is named 'id'", async () => {
+	const response = await api.get('/api/blogs')
+
+	response.body.map(blog => {
+		expect(blog.id).toBeDefined()
+	})
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
