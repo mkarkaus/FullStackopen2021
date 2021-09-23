@@ -45,6 +45,21 @@ test('POST request successfully creates a new blog post', async () => {
 	await api.delete(`/api/blogs/${addedBlog.body.id}`)
 })
 
+test("'Likes' property value will default to 0 if it's missing from the request", async () => {
+	const blog = {
+		title: 'THE Book',
+		author: 'THE author',
+		url: 'https://www.theurl.org'
+	}
+
+	const response = await api.post('/api/blogs').send(blog)
+	const addedBlog = await api.get(`/api/blogs/${response.body.id}`)
+
+	expect(addedBlog.body.likes).toBe(0)
+
+	await api.delete(`/api/blogs/${addedBlog.body.id}`)
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
