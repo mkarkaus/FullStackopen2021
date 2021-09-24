@@ -9,9 +9,14 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.get('/:id', async (request, response) => {
-	const blog = await Blog.findById(request.params.id)
-	if (blog)
-		response.json(blog)
+	if (mongoose.Types.ObjectId.isValid(request.params.id) && await Blog.findById(request.params.id))
+	{
+		const blog = await Blog.findById(request.params.id)
+		if (blog)
+			response.json(blog)
+		else
+			response.status(404).end()
+	}
 	else
 		response.status(404).end()
 })
@@ -32,6 +37,16 @@ blogsRouter.delete('/:id', async (request, response) => {
 	if (mongoose.Types.ObjectId.isValid(request.params.id) && await Blog.findById(request.params.id))
 	{
 		const blog = await Blog.findByIdAndRemove(request.params.id)
+		response.status(204).json(blog)
+	}
+	else
+		response.status(404).end()
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+	if (mongoose.Types.ObjectId.isValid(request.params.id) && await Blog.findById(request.params.id))
+	{
+		const blog = await Blog.findByIdAndUpdate(request.params.id, request.body)
 		response.status(204).json(blog)
 	}
 	else

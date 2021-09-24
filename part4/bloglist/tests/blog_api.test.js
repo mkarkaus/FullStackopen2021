@@ -101,11 +101,81 @@ describe('Deletion of a blog', () => {
 	})
 
 	test('Nonexisting Id returns 404', async () => {
-		const invalidId = '5a3d5da59070081a82a34465'
+		const nonexistingId = '5a3d5da59070081a82a34465'
 
 		await api
-			.delete(`/api/blogs/${invalidId}`)
+			.delete(`/api/blogs/${nonexistingId}`)
 			.expect(404)
+	})
+})
+
+describe('Modifying existing blog', () => {
+	test('Valid Id and data', async () => {
+		const origBlog = {
+			title: 'THE Book',
+			author: 'THE author',
+			url: 'https://www.theurl.org',
+			likes: 1122
+		}
+		const modifBlog = {
+			title: 'THE NEW Book',
+			author: 'THE NEW author',
+			url: 'https://www.thenewurl.org',
+			likes: 33
+		}
+
+		const response = await api.post('/api/blogs').send(origBlog)
+		const blog = response.body
+		await api.put(`/api/blogs/${blog.id}`).send(modifBlog)
+		
+		const endResponse = await api.get(`/api/blogs/${blog.id}`)
+		const endBlog = endResponse.body
+		delete endBlog.id
+		expect(endBlog).toStrictEqual(modifBlog)
+
+		await api.delete(`/api/blogs/${blog.id}`)
+	})
+
+	test('Invalid Id returns 404', async () => {
+		const invalidId = '5a3d5da59070081a82a3446'
+
+		await api
+			.put(`/api/blogs/${invalidId}`).send({})
+			.expect(404)
+	})
+
+	test('Nonexisting Id returns 404', async () => {
+		const nonexistingId = '5a3d5da59070081a82a34465'
+
+		await api
+			.put(`/api/blogs/${nonexistingId}`).send({})
+			.expect(404)
+	})
+
+	test('Update only likes', async () => {
+		const origBlog = {
+			title: 'THE Book',
+			author: 'THE author',
+			url: 'https://www.theurl.org',
+			likes: 1122
+		}
+		const modifBlog = {
+			title: 'THE Book',
+			author: 'THE author',
+			url: 'https://www.theurl.org',
+			likes: 33
+		}
+
+		const response = await api.post('/api/blogs').send(origBlog)
+		const blog = response.body
+		await api.put(`/api/blogs/${blog.id}`).send(modifBlog)
+		
+		const endResponse = await api.get(`/api/blogs/${blog.id}`)
+		const endBlog = endResponse.body
+		delete endBlog.id
+		expect(endBlog).toStrictEqual(modifBlog)
+
+		await api.delete(`/api/blogs/${blog.id}`)
 	})
 })
 
