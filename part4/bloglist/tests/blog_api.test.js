@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const helper = require('./blogs')
-const { request } = require('../app')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 const app = require('../app')
 
 const api = supertest(app)
@@ -10,13 +11,13 @@ describe('Inspecting all the blogs', () => {
 	test('correct amount of blogs and as json is returned', async () => {
 		const response = await api.get('/api/blogs')
 			.expect('Content-Type', /application\/json/)
-		
+
 		expect(response.body).toHaveLength(3)
 	})
-	
-	test("Unique identifier property is named 'id'", async () => {
+
+	test('Unique identifier property is named id', async () => {
 		const response = await api.get('/api/blogs')
-	
+
 		response.body.map(blog => {
 			expect(blog.id).toBeDefined()
 		})
@@ -34,37 +35,37 @@ describe('Adding a new blog', () => {
 			url: 'https://www.theurl.org',
 			likes: 1122
 		}
-	
+
 		const addedBlog = await api.post('/api/blogs').send(blog)
 		const updatedResponse = await api.get('/api/blogs')
 		const updatedBlogs = updatedResponse.body
 		const newBlog = updatedBlogs.find(blog => blog.id === addedBlog.body.id)
-	
+
 		expect(updatedBlogs).toHaveLength(initialBlogs.length + 1)
-	
+
 		expect(newBlog.title).toBe(blog.title)
 		expect(newBlog.author).toBe(blog.author)
 		expect(newBlog.url).toBe(blog.url)
 		expect(newBlog.likes).toBe(blog.likes)
-	
+
 		await api.delete(`/api/blogs/${addedBlog.body.id}`)
 	})
 
-	test("'Likes' property value will default to 0 if it's missing from the request", async () => {
+	test('Likes property value will default to 0 if it\'s missing from the request', async () => {
 		const blog = {
 			title: 'THE Book',
 			author: 'THE author',
 			url: 'https://www.theurl.org'
 		}
-	
+
 		const response = await api.post('/api/blogs').send(blog)
 		const addedBlog = await api.get(`/api/blogs/${response.body.id}`)
-	
+
 		expect(addedBlog.body.likes).toBe(0)
-	
+
 		await api.delete(`/api/blogs/${addedBlog.body.id}`)
 	})
-	
+
 	test('Missing title and url in request receive respond 400 Bad Request', async () => {
 		const blog = {
 			author: 'THE author',
@@ -88,7 +89,7 @@ describe('Deletion of a blog', () => {
 		const allBlogs = await api.get('/api/blogs')
 		await api.delete(`/api/blogs/${addedBlog.id}`).expect(204)
 		const afterDeletion = await api.get('/api/blogs')
-		
+
 		expect(afterDeletion.body).toHaveLength(allBlogs.body.length - 1)
 	})
 
@@ -127,7 +128,7 @@ describe('Modifying existing blog', () => {
 		const response = await api.post('/api/blogs').send(origBlog)
 		const blog = response.body
 		await api.put(`/api/blogs/${blog.id}`).send(modifBlog)
-		
+
 		const endResponse = await api.get(`/api/blogs/${blog.id}`)
 		const endBlog = endResponse.body
 		delete endBlog.id
@@ -169,13 +170,67 @@ describe('Modifying existing blog', () => {
 		const response = await api.post('/api/blogs').send(origBlog)
 		const blog = response.body
 		await api.put(`/api/blogs/${blog.id}`).send(modifBlog)
-		
+
 		const endResponse = await api.get(`/api/blogs/${blog.id}`)
 		const endBlog = endResponse.body
 		delete endBlog.id
 		expect(endBlog).toStrictEqual(modifBlog)
 
 		await api.delete(`/api/blogs/${blog.id}`)
+	})
+})
+
+describe('when there is initially one user in db', () => {
+	beforeEach(async () => {
+		await User.deleteMany({})
+
+		const passwordHash = await bcrypt.hash('sekret', 10)
+		const user = new User({ username: 'root', passwordHash })
+
+		await user.save()
+	})
+
+	test('creation succeeds with a fresh username', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		const newUser = {
+			username: 'mluukkai',
+			name: 'Matti Luukkainen',
+			password: 'salainen',
+		}
+
+		await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(200)
+			.expect('Content-Type', /application\/json/)
+
+		const usersAtEnd = await helper.usersInDb()
+		expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+		const usernames = usersAtEnd.map(u => u.username)
+		expect(usernames).toContain(newUser.username)
+	})
+
+	test('creation fails with proper statuscode and message if username already taken', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		const newUser = {
+			username: 'root',
+			name: 'Superuser',
+			password: 'salainen',
+		}
+
+		const result = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(result.body.error).toContain('`username` to be unique')
+
+		const usersAtEnd = await helper.usersInDb()
+		expect(usersAtEnd).toHaveLength(usersAtStart.length)
 	})
 })
 
