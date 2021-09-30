@@ -53,10 +53,22 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-	if (mongoose.Types.ObjectId.isValid(request.params.id) && await Blog.findById(request.params.id))
+	const blogId = request.params.id
+	const blog = (mongoose.Types.ObjectId.isValid(blogId))
+		? await Blog.findById(blogId)
+		: null
+	if (blog)
 	{
-		const blog = await Blog.findByIdAndRemove(request.params.id)
-		response.status(204).json(blog)
+		const decodedToken = (request.token)
+			? jwt.verify(request.token, process.env.SECRET)
+			: null
+		if (decodedToken && blog.user.toString() === decodedToken.id.toString())
+		{
+			await Blog.findByIdAndRemove(blogId)
+			response.status(204).end()
+		}
+		else
+			response.status(401).json({ error: 'you don\'t have the permissions' })
 	}
 	else
 		response.status(404).end()
