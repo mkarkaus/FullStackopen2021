@@ -1,8 +1,5 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const helper = require('./blogs')
-const bcrypt = require('bcrypt')
-const User = require('../models/user')
 const app = require('../app')
 
 const api = supertest(app)
