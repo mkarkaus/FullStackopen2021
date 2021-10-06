@@ -261,12 +261,34 @@ const listWithSomeEmpty = [
 	}
 ]
 
+const initialBlogs = [
+	{
+		title: 'Test',
+		author: 'Bill Musk',
+		url: 'https://www.google.com/',
+		likes: 10
+	},
+	{
+		title: 'Some recipe',
+		author: 'Gordon Ramsay',
+		url: 'https://www.youtube.com/',
+		likes: 321
+	},
+	{
+		title: 'New one',
+		author: 'How to grow a plant',
+		url: 'https://en.wikipedia.org/wiki/Plant',
+		likes: 3423
+	}
+]
+
 const usersInDb = async () => {
 	const users = await User.find({})
 	return users.map(u => u.toJSON())
 }
 
 module.exports = {
+	initialBlogs,
 	biggerList,
 	listWithOneBlog,
 	listWithoutlikes,

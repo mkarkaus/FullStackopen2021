@@ -3,9 +3,34 @@ const supertest = require('supertest')
 const helper = require('./blogs')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const Blog = require('../models/blog')
 const app = require('../app')
 
 const api = supertest(app)
+
+beforeAll(async () => {
+	const user = {
+		username: 'mkarkaus',
+		password: 'miikka'
+	}
+
+	const response = await api
+		.post('/api/login')
+		.send(user)
+
+	const token = response.body.token
+	return process.env.token = token
+})
+
+afterAll(() => {
+	return delete process.env.token
+})
+
+beforeEach(async () => {
+	await Blog.deleteMany({})
+	await Blog.insertMany(helper.initialBlogs)
+})
+
 
 describe('Inspecting all the blogs', () => {
 	test('correct amount of blogs and as json is returned', async () => {
@@ -26,6 +51,7 @@ describe('Inspecting all the blogs', () => {
 
 
 describe('Adding a new blog', () => {
+
 	test('POST request successfully creates a new blog post', async () => {
 		const response = await api.get('/api/blogs')
 		const initialBlogs = response.body
@@ -36,7 +62,10 @@ describe('Adding a new blog', () => {
 			likes: 1122
 		}
 
-		const addedBlog = await api.post('/api/blogs').send(blog)
+		const addedBlog = await api.post('/api/blogs')
+			.send(blog)
+			.set('Authorization', 'bearer ' + process.env.token)
+
 		const updatedResponse = await api.get('/api/blogs')
 		const updatedBlogs = updatedResponse.body
 		const newBlog = updatedBlogs.find(blog => blog.id === addedBlog.body.id)
@@ -47,8 +76,6 @@ describe('Adding a new blog', () => {
 		expect(newBlog.author).toBe(blog.author)
 		expect(newBlog.url).toBe(blog.url)
 		expect(newBlog.likes).toBe(blog.likes)
-
-		await api.delete(`/api/blogs/${addedBlog.body.id}`)
 	})
 
 	test('Likes property value will default to 0 if it\'s missing from the request', async () => {
@@ -58,12 +85,12 @@ describe('Adding a new blog', () => {
 			url: 'https://www.theurl.org'
 		}
 
-		const response = await api.post('/api/blogs').send(blog)
+		const response = await api.post('/api/blogs')
+			.send(blog)
+			.set('Authorization', 'bearer ' + process.env.token)
 		const addedBlog = await api.get(`/api/blogs/${response.body.id}`)
 
 		expect(addedBlog.body.likes).toBe(0)
-
-		await api.delete(`/api/blogs/${addedBlog.body.id}`)
 	})
 
 	test('Missing title and url in request receive respond 400 Bad Request', async () => {
@@ -71,7 +98,23 @@ describe('Adding a new blog', () => {
 			author: 'THE author',
 			likes: 1122
 		}
-		await api.post('/api/blogs').send(blog).expect(400)
+		await api.post('/api/blogs')
+			.send(blog)
+			.set('Authorization', 'bearer ' + process.env.token)
+			.expect(400)
+	})
+
+	test('Adding a blog results in status code 401 without token', async () => {
+		const blog = {
+			title: 'THE Book',
+			author: 'THE author',
+			url: 'https://www.theurl.org',
+			likes: 300
+		}
+
+		await api.post('/api/blogs')
+			.send(blog)
+			.expect(401)
 	})
 })
 
@@ -84,10 +127,16 @@ describe('Deletion of a blog', () => {
 			likes: 1122
 		}
 
-		const response = await api.post('/api/blogs').send(blog)
+		const response = await api
+			.post('/api/blogs')
+			.send(blog)
+			.set('Authorization', 'bearer ' + process.env.token)
 		const addedBlog = response.body
 		const allBlogs = await api.get('/api/blogs')
-		await api.delete(`/api/blogs/${addedBlog.id}`).expect(204)
+		await api
+			.delete(`/api/blogs/${addedBlog.id}`)
+			.set('Authorization', 'bearer ' + process.env.token)
+			.expect(204)
 		const afterDeletion = await api.get('/api/blogs')
 
 		expect(afterDeletion.body).toHaveLength(allBlogs.body.length - 1)
@@ -98,6 +147,7 @@ describe('Deletion of a blog', () => {
 
 		await api
 			.delete(`/api/blogs/${invalidId}`)
+			.set('Authorization', 'bearer ' + process.env.token)
 			.expect(404)
 	})
 
@@ -106,6 +156,7 @@ describe('Deletion of a blog', () => {
 
 		await api
 			.delete(`/api/blogs/${nonexistingId}`)
+			.set('Authorization', 'bearer ' + process.env.token)
 			.expect(404)
 	})
 })
@@ -125,23 +176,27 @@ describe('Modifying existing blog', () => {
 			likes: 33
 		}
 
-		const response = await api.post('/api/blogs').send(origBlog)
+		const response = await api.post('/api/blogs')
+			.send(origBlog)
+			.set('Authorization', 'bearer ' + process.env.token)
 		const blog = response.body
-		await api.put(`/api/blogs/${blog.id}`).send(modifBlog)
-
+		await api.put(`/api/blogs/${blog.id}`)
+			.send(modifBlog)
+			.set('Authorization', 'bearer ' + process.env.token)
 		const endResponse = await api.get(`/api/blogs/${blog.id}`)
 		const endBlog = endResponse.body
 		delete endBlog.id
+		delete endBlog.user
 		expect(endBlog).toStrictEqual(modifBlog)
-
-		await api.delete(`/api/blogs/${blog.id}`)
 	})
 
 	test('Invalid Id returns 404', async () => {
 		const invalidId = '5a3d5da59070081a82a3446'
 
 		await api
-			.put(`/api/blogs/${invalidId}`).send({})
+			.put(`/api/blogs/${invalidId}`)
+			.send({})
+			.set('Authorization', 'bearer ' + process.env.token)
 			.expect(404)
 	})
 
@@ -149,7 +204,9 @@ describe('Modifying existing blog', () => {
 		const nonexistingId = '5a3d5da59070081a82a34465'
 
 		await api
-			.put(`/api/blogs/${nonexistingId}`).send({})
+			.put(`/api/blogs/${nonexistingId}`)
+			.send({})
+			.set('Authorization', 'bearer ' + process.env.token)
 			.expect(404)
 	})
 
@@ -167,16 +224,18 @@ describe('Modifying existing blog', () => {
 			likes: 33
 		}
 
-		const response = await api.post('/api/blogs').send(origBlog)
+		const response = await api.post('/api/blogs')
+			.send(origBlog)
+			.set('Authorization', 'bearer ' + process.env.token)
 		const blog = response.body
-		await api.put(`/api/blogs/${blog.id}`).send(modifBlog)
-
+		await api.put(`/api/blogs/${blog.id}`)
+			.send(modifBlog)
+			.set('Authorization', 'bearer ' + process.env.token)
 		const endResponse = await api.get(`/api/blogs/${blog.id}`)
 		const endBlog = endResponse.body
 		delete endBlog.id
+		delete endBlog.user
 		expect(endBlog).toStrictEqual(modifBlog)
-
-		await api.delete(`/api/blogs/${blog.id}`)
 	})
 })
 
@@ -184,8 +243,8 @@ describe('when there is initially one user in db', () => {
 	beforeEach(async () => {
 		await User.deleteMany({})
 
-		const passwordHash = await bcrypt.hash('sekret', 10)
-		const user = new User({ username: 'root', passwordHash })
+		const passwordHash = await bcrypt.hash('miikka', 10)
+		const user = new User({ username: 'mkarkaus', passwordHash })
 
 		await user.save()
 	})
@@ -216,8 +275,8 @@ describe('when there is initially one user in db', () => {
 		const usersAtStart = await helper.usersInDb()
 
 		const newUser = {
-			username: 'root',
-			name: 'Superuser',
+			username: 'mkarkaus',
+			name: 'Impostor',
 			password: 'salainen',
 		}
 
@@ -227,7 +286,7 @@ describe('when there is initially one user in db', () => {
 			.expect(400)
 			.expect('Content-Type', /application\/json/)
 
-		expect(result.body.error).toContain('`username` to be unique')
+		expect(result.body.error).toContain('username is already in use')
 
 		const usersAtEnd = await helper.usersInDb()
 		expect(usersAtEnd).toHaveLength(usersAtStart.length)
