@@ -7,6 +7,9 @@ const App = () => {
 	const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
+	const [title, setTitle] = useState('')
+	const [author, setAuthor] = useState('')
+	const [url, setUrl] = useState('')
 	const [user, setUser] = useState(null)
 
   	useEffect(() => {
@@ -23,6 +26,9 @@ const App = () => {
 
 	const handleLogout = () => {
 		setUser(null)
+		setTitle('')
+		setAuthor('')
+		setUrl('')
 		window.localStorage.removeItem('loggedBlogappUser')
 	}
 
@@ -46,13 +52,25 @@ const App = () => {
 		}
 	}
 
-	const showBlogs = () => (
-		<div>
-			{blogs.map(blog =>
-				<Blog key={blog.id} blog={blog} />
-			)}
-		</div>
-	)
+	const addBlog = async event => {
+		event.preventDefault()
+
+		try {
+			await blogService.createNew({
+				title,
+				author,
+				url
+			}, user.token)
+			const newBlogs = await blogService.getAll()
+
+			setTitle('')
+			setAuthor('')
+			setUrl('')
+			setBlogs(newBlogs)
+		} catch (exception) {
+
+		}
+	}
 
 	const loginForm = () => (
 		<div>
@@ -79,6 +97,47 @@ const App = () => {
 		</div>
 	)
 
+	const blogForm = () => (
+		<div>
+			<h2>Create a new blog</h2>
+			<form onSubmit={addBlog}>
+				<div>
+					title: <input
+						type="text"
+						value={title}
+						name="Title"
+						onChange={({ target }) => setTitle(target.value)}
+					/>
+				</div>
+				<div>
+					author: <input
+						type="text"
+						value={author}
+						name="Author"
+						onChange={({ target }) => setAuthor(target.value)}
+					/>
+				</div>
+				<div>
+					url: <input
+						type="text"
+						value={url}
+						name="Url"
+						onChange={({ target }) => setUrl(target.value)}
+					/>
+				</div>
+				<button type= "submit">create</button>
+			</form>
+		</div>
+	)
+
+	const showBlogs = () => (
+		<div>
+			{blogs.map(blog =>
+				<Blog key={blog.id} blog={blog} />
+			)}
+		</div>
+	)
+
   	return (
 		<div>
 			{
@@ -89,6 +148,8 @@ const App = () => {
 					<p>{user.name} logged in&nbsp;
 						<button type="button" onClick={handleLogout}>logout</button>
 					</p>
+					{blogForm()}
+					<br/>
 					{showBlogs()}
 				</div>
 			}
