@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
+	const [notification, setNotification] = useState({ message: null, type: null })
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [title, setTitle] = useState('')
@@ -30,6 +32,13 @@ const App = () => {
 		setAuthor('')
 		setUrl('')
 		window.localStorage.removeItem('loggedBlogappUser')
+		setNotification({
+			message: "Logged out successfully",
+			type: "notification"
+		})
+		setTimeout(() => {
+			setNotification({ message: null, type: null })
+		}, 2000)
 	}
 
 	const handleLogin = async event => {
@@ -47,9 +56,19 @@ const App = () => {
 			setUser(user)
 			setUsername('')
 			setPassword('')
+			setNotification({
+				message: `${user.username} logged in successfully`,
+				type: "notification"
+			})
 		} catch (exception) {
-
+			setNotification({
+				message: "Wrong username or password",
+				type: "error"
+			})
 		}
+		setTimeout(() => {
+			setNotification({ message: null, type: null })
+		}, 2000)
 	}
 
 	const addBlog = async event => {
@@ -67,14 +86,28 @@ const App = () => {
 			setAuthor('')
 			setUrl('')
 			setBlogs(newBlogs)
+			setNotification({
+				message: `'${title}' by author '${author}' added successfully`,
+				type: "notification"
+			})
 		} catch (exception) {
-
+			setNotification({
+				message: "Invalid blog",
+				type: "error"
+			})
 		}
+		setTimeout(() => {
+			setNotification({ message: null, type: null })
+		}, 2000)
 	}
 
 	const loginForm = () => (
 		<div>
 			<h2>Log in to application</h2>
+			<Notification 
+						message={notification.message}
+						type={notification.type}
+			/>
 			<form onSubmit={handleLogin}>
 				<div>
 					username <input 
@@ -145,7 +178,12 @@ const App = () => {
 				loginForm() :
 				<div>
 					<h2>blogs</h2>
-					<p>{user.name} logged in&nbsp;
+					<Notification 
+						message={notification.message}
+						type={notification.type}
+					/>
+					<p>
+						{user.name} logged in&nbsp;
 						<button type="button" onClick={handleLogout}>logout</button>
 					</p>
 					{blogForm()}
