@@ -22,6 +22,19 @@ const Blog = React.forwardRef((props, ref) => {
 		return { toggleVisibility }
 	})
 
+	const addLike = (event) => {
+		event.preventDefault()
+
+		props.incrementLike({
+			title: props.blog.title,
+			author: props.blog.author,
+			url: props.blog.url,
+			likes: props.blog.likes,
+			id: props.blog.id,
+			user: props.blog.user.id
+		})
+	}
+
 	return (
 		<div style={blogStyle}>
 			<div>
@@ -33,10 +46,12 @@ const Blog = React.forwardRef((props, ref) => {
 			<div style={{ display: showAll ? '' : 'none'}}>
 				{props.blog.url}
 				<br />
-				likes: {props.blog.likes}
-				&nbsp;<button>like</button>
+				likes: {props.blog.likes} <button onClick={addLike}>like</button>
 				<br />
-				{props.blog.user.name !== undefined ? props.blog.user.name : props.blog.user.username}
+				{props.blog.user.name !== undefined ?
+					props.blog.user.name :
+					props.blog.user.username
+				}
 			</div>  
 		</div>
 	)

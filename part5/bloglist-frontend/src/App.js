@@ -94,6 +94,19 @@ const App = () => {
 		}, 2000)
 	}
 
+	const addLike = async (blogObject) => {
+		await blogService.modify({
+			user: blogObject.user,
+			likes: blogObject.likes + 1,
+			author: blogObject.author,
+			title: blogObject.title,
+			url: blogObject.url,
+			id: blogObject.id
+		})
+		const newBlogs = await blogService.getAll()
+		setBlogs(newBlogs)
+	}
+
 	const loginForm = () => (
 		<LoginForm 
 			notification={notification}
@@ -114,7 +127,11 @@ const App = () => {
 	const showBlogs = () => (
 		<div>
 			{blogs.map(blog =>
-				<Blog key={blog.id} blog={blog} ref={blogRef} />
+				<Blog key={blog.id}
+					blog={blog}
+					ref={blogRef}
+					incrementLike={addLike}
+				/>
 			)}
 		</div>
 	)
