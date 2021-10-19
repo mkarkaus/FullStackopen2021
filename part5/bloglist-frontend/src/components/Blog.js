@@ -1,4 +1,5 @@
 import React, { useState, useImperativeHandle } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = React.forwardRef(({
 		blog,
@@ -74,5 +75,12 @@ const Blog = React.forwardRef(({
 		</div>
 	)
 })
+
+Blog.propTypes = {
+	blog: PropTypes.object.isRequired,
+	incrementLike: PropTypes.func.isRequired,
+	removeBlog: PropTypes.func.isRequired,
+	validateUser: PropTypes.func.isRequired
+}
 
 export default Blog
