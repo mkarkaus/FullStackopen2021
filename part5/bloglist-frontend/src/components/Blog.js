@@ -2,10 +2,10 @@ import React, { useState, useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = React.forwardRef(({
-		blog,
-		incrementLike,
-		removeBlog,
-		validateUser
+	blog,
+	incrementLike,
+	removeBlog,
+	validateUser
 }, ref) => {
 	const [showAll, setShowAll] = useState(false)
 
@@ -55,26 +55,28 @@ const Blog = React.forwardRef(({
 					{showAll ? 'hide' : 'view'}
 				</button>
 			</div>
-			<div style={{ display: showAll ? '' : 'none'}}>
+			<div style={{ display: showAll ? '' : 'none' }}>
 				{blog.url}
 				<br />
 				likes: {blog.likes} <button onClick={addLike}>like</button>
 				<br />
 				{
 					blog.user.name !== undefined ?
-					blog.user.name :
-					blog.user.username
+						blog.user.name :
+						blog.user.username
 				}
 				<br />
 				{
 					validateUser(blog) ?
-						<button style={{color: 'red'}} onClick={deleteBlog}>remove</button> :
+						<button style={{ color: 'red' }} onClick={deleteBlog}>remove</button> :
 						null
 				}
-			</div>  
+			</div>
 		</div>
 	)
 })
+
+Blog.displayName = 'Blog'
 
 Blog.propTypes = {
 	blog: PropTypes.object.isRequired,

@@ -17,13 +17,13 @@ const App = () => {
 	const blogFormRef = useRef()
 	const blogRef = useRef()
 
-  	useEffect(() => {
+	useEffect(() => {
 		blogService.getAll().then(blogs =>
 			setBlogs( blogs )
-		)  
+		)
 	}, [])
 
-  	useEffect(() => {
+	useEffect(() => {
 		const loggedUser = window.localStorage.getItem('loggedBlogappUser')
 
 		if (loggedUser)
@@ -39,8 +39,8 @@ const App = () => {
 		window.localStorage.removeItem('loggedBlogappUser')
 		blogService.setToken(null)
 		setNotification({
-			message: "Logged out successfully",
-			type: "notification"
+			message: 'Logged out successfully',
+			type: 'notification'
 		})
 		setTimeout(() => {
 			setNotification({ message: null, type: null })
@@ -65,12 +65,12 @@ const App = () => {
 			blogService.setToken(user.token)
 			setNotification({
 				message: `${user.username} logged in successfully`,
-				type: "notification"
+				type: 'notification'
 			})
 		} catch (exception) {
 			setNotification({
-				message: "Wrong username or password",
-				type: "error"
+				message: 'Wrong username or password',
+				type: 'error'
 			})
 		}
 		setTimeout(() => {
@@ -88,12 +88,12 @@ const App = () => {
 			setBlogs(newBlogs)
 			setNotification({
 				message: `'${blogObject.title}' by author '${blogObject.author}' added successfully`,
-				type: "notification"
+				type: 'notification'
 			})
 		} catch (exception) {
 			setNotification({
-				message: "Invalid blog",
-				type: "error"
+				message: 'Invalid blog',
+				type: 'error'
 			})
 		}
 		setTimeout(() => {
@@ -123,15 +123,15 @@ const App = () => {
 
 			setNotification({
 				message: `'${blog.title}' succesfully removed`,
-				type: "notification"
+				type: 'notification'
 			})
 			const newBlogs = await blogService.getAll()
 			setBlogs(newBlogs)
 		}
 		else
 			setNotification({
-				message: "Unauthorized to remove that blog",
-				type: "error"
+				message: 'Unauthorized to remove that blog',
+				type: 'error'
 			})
 		setTimeout(() => {
 			setNotification({ message: null, type: null })
@@ -139,7 +139,7 @@ const App = () => {
 	}
 
 	const loginForm = () => (
-		<LoginForm 
+		<LoginForm
 			notification={notification}
 			handleLogin={handleLogin}
 			username={username}
@@ -166,29 +166,29 @@ const App = () => {
 						removeBlog={removeBlog}
 						validateUser={matchingUser}
 					/>
-			)}
+				)}
 		</div>
 	)
 
-  	return (
+	return (
 		<div>
 			{
 				user === null ?
-				loginForm() :
-				<div>
-					<h2>blogs</h2>
-					<Notification 
-						message={notification.message}
-						type={notification.type}
-					/>
-					<p>
-						{user.name} logged in&nbsp;
-						<button type="button" onClick={handleLogout}>logout</button>
-					</p>
-					{blogForm()}
-					<br/>
-					{showBlogs()}
-				</div>
+					loginForm() :
+					<div>
+						<h2>blogs</h2>
+						<Notification
+							message={notification.message}
+							type={notification.type}
+						/>
+						<p>
+							{user.name} logged in&nbsp;
+							<button type="button" onClick={handleLogout}>logout</button>
+						</p>
+						{blogForm()}
+						<br/>
+						{showBlogs()}
+					</div>
 			}
 		</div>
 	)
