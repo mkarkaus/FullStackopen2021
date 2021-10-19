@@ -126,12 +126,13 @@ const App = () => {
 
 	const showBlogs = () => (
 		<div>
-			{blogs.map(blog =>
-				<Blog key={blog.id}
-					blog={blog}
-					ref={blogRef}
-					incrementLike={addLike}
-				/>
+			{blogs.sort((first, next) => next.likes - first.likes)
+				.map(blog =>
+					<Blog key={blog.id}
+						blog={blog}
+						ref={blogRef}
+						incrementLike={addLike}
+					/>
 			)}
 		</div>
 	)
