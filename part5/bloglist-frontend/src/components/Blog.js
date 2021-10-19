@@ -1,6 +1,11 @@
 import React, { useState, useImperativeHandle } from 'react'
 
-const Blog = React.forwardRef((props, ref) => {
+const Blog = React.forwardRef(({
+		blog,
+		incrementLike,
+		removeBlog,
+		validateUser
+}, ref) => {
 	const [showAll, setShowAll] = useState(false)
 
 	const blogStyle = {
@@ -25,32 +30,45 @@ const Blog = React.forwardRef((props, ref) => {
 	const addLike = (event) => {
 		event.preventDefault()
 
-		props.incrementLike({
-			title: props.blog.title,
-			author: props.blog.author,
-			url: props.blog.url,
-			likes: props.blog.likes,
-			id: props.blog.id,
-			user: props.blog.user.id
+		incrementLike({
+			title: blog.title,
+			author: blog.author,
+			url: blog.url,
+			likes: blog.likes,
+			id: blog.id,
+			user: blog.user.id
 		})
+	}
+
+	const deleteBlog = (event) => {
+		event.preventDefault()
+		if (window.confirm(`Remove blog '${blog.title}' by author '${blog.author}'?`))
+			removeBlog(blog)
 	}
 
 	return (
 		<div style={blogStyle}>
 			<div>
-				{props.blog.title} {props.blog.author}
+				{blog.title} {blog.author}
 				&nbsp;<button onClick={toggleVisibility}>
 					{showAll ? 'hide' : 'view'}
 				</button>
 			</div>
 			<div style={{ display: showAll ? '' : 'none'}}>
-				{props.blog.url}
+				{blog.url}
 				<br />
-				likes: {props.blog.likes} <button onClick={addLike}>like</button>
+				likes: {blog.likes} <button onClick={addLike}>like</button>
 				<br />
-				{props.blog.user.name !== undefined ?
-					props.blog.user.name :
-					props.blog.user.username
+				{
+					blog.user.name !== undefined ?
+					blog.user.name :
+					blog.user.username
+				}
+				<br />
+				{
+					validateUser(blog) ?
+						<button style={{color: 'red'}} onClick={deleteBlog}>remove</button> :
+						null
 				}
 			</div>  
 		</div>

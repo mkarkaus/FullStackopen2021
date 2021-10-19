@@ -26,12 +26,18 @@ const App = () => {
   	useEffect(() => {
 		const loggedUser = window.localStorage.getItem('loggedBlogappUser')
 
-		setUser(loggedUser ? JSON.parse(loggedUser) : null)
+		if (loggedUser)
+		{
+			const user = JSON.parse(loggedUser)
+			setUser(user)
+			blogService.setToken(user.token)
+		}
 	}, [])
 
 	const handleLogout = () => {
 		setUser(null)
 		window.localStorage.removeItem('loggedBlogappUser')
+		blogService.setToken(null)
 		setNotification({
 			message: "Logged out successfully",
 			type: "notification"
@@ -56,6 +62,7 @@ const App = () => {
 			setUser(user)
 			setUsername('')
 			setPassword('')
+			blogService.setToken(user.token)
 			setNotification({
 				message: `${user.username} logged in successfully`,
 				type: "notification"
@@ -107,6 +114,30 @@ const App = () => {
 		setBlogs(newBlogs)
 	}
 
+	const matchingUser = (blog) => user.username === blog.user.username
+
+	const removeBlog = async (blog) => {
+		if (user.username === blog.user.username)
+		{
+			await blogService.deleteOne(blog)
+
+			setNotification({
+				message: `'${blog.title}' succesfully removed`,
+				type: "notification"
+			})
+			const newBlogs = await blogService.getAll()
+			setBlogs(newBlogs)
+		}
+		else
+			setNotification({
+				message: "Unauthorized to remove that blog",
+				type: "error"
+			})
+		setTimeout(() => {
+			setNotification({ message: null, type: null })
+		}, 2000)
+	}
+
 	const loginForm = () => (
 		<LoginForm 
 			notification={notification}
@@ -132,6 +163,8 @@ const App = () => {
 						blog={blog}
 						ref={blogRef}
 						incrementLike={addLike}
+						removeBlog={removeBlog}
+						validateUser={matchingUser}
 					/>
 			)}
 		</div>
